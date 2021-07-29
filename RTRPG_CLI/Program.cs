@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using YamlDotNet.Serialization;
 
 namespace RTRPG_CLI
 {
@@ -11,10 +13,11 @@ namespace RTRPG_CLI
     {
         static void Main(string[] args)
         {
-            Map map = new Map();
-            map.Name = "map0";
-
-            Console.WriteLine(map.Name);
+            GM manager = GM.Instance;
+            Editor editor = new Editor(manager);
+            //Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
+            
+            editor.CLI();
             Console.ReadKey();
         }
     }
