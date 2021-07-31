@@ -9,8 +9,6 @@ namespace RTRPG_CORE
 {
     public class Map
     {
-        private static int g_id = 0;
-
         [YamlMember(Order = 0)]
         public int ID { get; set; }
 
@@ -24,15 +22,10 @@ namespace RTRPG_CORE
         public List<Event> onLeave = new List<Event>();
 
         [YamlMember(Alias = "角色", Order = 4)]
-        public List<Character> Characters = new List<Character>();
-        public static Map Create(string name)
-        {
-            Map map = new Map
-            {
-                ID = g_id++,
-                Name = name
-            };
-            return map;
+        public List<Tuple<int, string>> CharactersRef;
+
+        public Tuple<int, string> Refer {
+            get => new Tuple<int, string>(ID, Name);
         }
     }
 }

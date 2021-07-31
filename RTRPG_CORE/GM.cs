@@ -11,6 +11,9 @@ namespace RTRPG_CORE
     {
         [YamlMember(Alias = "地图", Order = 1)]
         public List<Map> maps = new List<Map>();
+        
+        [YamlMember(Alias = "角色", Order = 2)]
+        public List<Character> characters = new List<Character>();
 
         public static GM Instance {
             get {
@@ -24,5 +27,37 @@ namespace RTRPG_CORE
         }
 
         private static GM __instance = null;
+
+        public Map AppendMap(string name)
+        {
+            maps.Add(new Map() {
+                ID = maps.Count,
+                Name = name
+            });
+
+            return maps.Last();
+        }
+
+        public Character AppendCharacter(string name)
+        {
+            characters.Add(new Character()
+            {
+                ID = characters.Count,
+                Name = name
+            });
+
+            return characters.Last();
+        }
+
+        public void SetPosition(Map map, Character character)
+        {
+            var before_position = character.Position;
+
+            if(before_position.Item1 < maps.Count)
+                maps[before_position.Item1].CharactersRef.RemoveAll((t) => t.Item1 == character.Refer.Item1);
+
+            map.CharactersRef.Add(character.Refer);
+            character.Position = map.Refer;
+        }
     }
 }

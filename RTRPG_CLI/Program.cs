@@ -18,6 +18,7 @@ namespace RTRPG_CLI
             //Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
             
             editor.CLI();
+            
             Console.ReadKey();
         }
     }

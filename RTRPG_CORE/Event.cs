@@ -9,8 +9,6 @@ namespace RTRPG_CORE
 {
     public class Event
     {
-        private static int g_id = 0;
-
         [YamlMember(Order = 1)]
         public int ID;
 
@@ -28,15 +26,5 @@ namespace RTRPG_CORE
 
         [YamlMember(Alias = "后继事件ID", Order = 2)]
         public int NextEventID;
-
-        public static Event Create(string desc)
-        {
-            Event @event = new Event
-            {
-                ID = g_id++,
-                Description = desc
-            };
-            return @event;
-        }
     }
 }
