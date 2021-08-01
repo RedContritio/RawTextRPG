@@ -24,6 +24,7 @@ namespace RTRPG_CORE
         [YamlMember(Alias = "角色", Order = 4)]
         public List<Tuple<int, string>> CharactersRef;
 
+        [YamlIgnore]
         public Tuple<int, string> Refer {
             get => new Tuple<int, string>(ID, Name);
         }

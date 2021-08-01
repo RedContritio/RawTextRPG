@@ -33,6 +33,11 @@ namespace RTRPG_CLI
                 string method = args[0].ToLower();
                 switch (method)
                 {
+                    case "add":
+                    {
+                        this.Add(args);
+                        break;
+                    }
                     case "list":
                     {
                         this.List(args);
@@ -52,14 +57,14 @@ namespace RTRPG_CLI
         public void List(List<string> args)
         {
             if (args.Count <= 1)
-                Console.WriteLine("Must specify list type (map or character)");
+                Console.WriteLine("Must specify type (map or character)");
             else
             {
                 switch (args[1].ToLower())
                 {
                     case "map":
                     {
-                        Console.WriteLine($"List all maps, size: {0}", __manager.maps.Count);
+                        Console.WriteLine($"List all maps, size: {__manager.maps.Count}");
                         foreach (var obj in __manager.maps)
                         {
                             Console.WriteLine(obj.Serialize());
@@ -68,11 +73,40 @@ namespace RTRPG_CLI
                     }
                     case "character":
                     {
-                        Console.WriteLine($"List all characters, size: {0}", __manager.characters.Count);
+                        Console.WriteLine($"List all characters, size: {__manager.characters.Count}");
                         foreach (var obj in __manager.characters)
                         {
                             Console.WriteLine(obj.Serialize());
                         }
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void Add(List<string> args)
+        {
+            if (args.Count <= 2)
+                Console.WriteLine("Must specify type (map or character) and name, i.e. \"add map 真新镇\"");
+            else
+            {
+                switch (args[1].ToLower())
+                {
+                    case "map":
+                    {
+                        var map = __manager.AddMap(args[2]);
+                        Console.WriteLine($"Add map: \n {map.Serialize()}");
+                        break;
+                    }
+                    case "character":
+                    {
+                        var character = __manager.AddCharacter(args[2]);
+                        Console.WriteLine($"Add character: \n {character.Serialize()}");
+                        break;
+                    }
+                    default:
+                    {
+                        Console.WriteLine($"Invalid type \"{args[1]}\".");
                         break;
                     }
                 }

@@ -18,6 +18,7 @@ namespace RTRPG_CORE
         [YamlMember(Alias = "位置", Order = 2)]
         public Tuple<int, string> Position;
 
+        [YamlIgnore]
         public Tuple<int, string> Refer
         {
             get => new Tuple<int, string>(ID, Name);

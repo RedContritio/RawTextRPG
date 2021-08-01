@@ -28,7 +28,7 @@ namespace RTRPG_CORE
 
         private static GM __instance = null;
 
-        public Map AppendMap(string name)
+        public Map AddMap(string name)
         {
             maps.Add(new Map() {
                 ID = maps.Count,
@@ -38,7 +38,7 @@ namespace RTRPG_CORE
             return maps.Last();
         }
 
-        public Character AppendCharacter(string name)
+        public Character AddCharacter(string name)
         {
             characters.Add(new Character()
             {
