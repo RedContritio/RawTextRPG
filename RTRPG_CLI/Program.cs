@@ -17,7 +17,9 @@ namespace RTRPG_CLI
             Editor editor = new Editor(manager);
             //Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
             
-            editor.CLI();
+            //editor.CLI();
+
+            Game.Play();
             
             Console.ReadKey();
         }

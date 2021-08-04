@@ -159,7 +159,7 @@ namespace RTRPG_CLI
             }
             else
             {
-                throw new KeyNotFoundException("Invalid operate type.");
+                throw new KeyNotFoundException("Invalid Type.");
             }
         }
     }
