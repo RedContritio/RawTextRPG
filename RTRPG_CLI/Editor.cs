@@ -30,6 +30,8 @@ namespace RTRPG_CLI
                 methods.Add(m.Name.ToLower(), (object[] os) => m.Invoke(this, os));
             }
 
+            Load(new List<string>());
+
             while (true)
             {
                 Console.Write("> ");
