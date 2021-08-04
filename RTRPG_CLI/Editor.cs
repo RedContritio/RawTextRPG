@@ -1,6 +1,7 @@
 ﻿using RTRPG_CORE;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace RTRPG_CLI
     {
         private GM __manager;
 
+        private const string default_save_path = "./rtrpg.dat";
+
         public Editor(GM manager)
         {
             __manager = manager ?? throw new ArgumentNullException(nameof(manager));
@@ -20,6 +23,13 @@ namespace RTRPG_CLI
         {
             string input;
             List<string> args;
+            Dictionary<string, Action<object[]>> methods = new Dictionary<string, Action<object[]>>();
+
+            foreach (System.Reflection.MethodInfo m in typeof(Editor).GetMethods())
+            {
+                methods.Add(m.Name.ToLower(), (object[] os) => m.Invoke(this, os));
+            }
+
             while (true)
             {
                 Console.Write("> ");
@@ -31,22 +41,17 @@ namespace RTRPG_CLI
                     continue;
 
                 string method = args[0].ToLower();
-                switch (method)
+
+                if (method == "exit")
+                    goto END_CLI;
+
+                if (methods.ContainsKey(method))
                 {
-                    case "add":
-                    {
-                        this.Add(args);
-                        break;
-                    }
-                    case "list":
-                    {
-                        this.List(args);
-                        break;
-                    }
-                    case "exit":
-                    {
-                        goto END_CLI;
-                    }
+                    methods[method].Invoke(new object[] { args });
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Command");
                 }
             }
 
@@ -110,6 +115,37 @@ namespace RTRPG_CLI
                         break;
                     }
                 }
+            }
+        }
+
+        public void Load(List<string> args)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(default_save_path))
+                {
+                    __manager = Serialization.Deserialize<GM>(sr.ReadToEnd());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Load failed.");
+                Console.WriteLine(e.Message);
+            }
+        }
+        public void Save(List<string> args)
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(default_save_path))
+                {
+                    sw.Write(__manager.Serialize());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Save failed.");
+                Console.WriteLine(e.Message);
             }
         }
     }
