@@ -61,60 +61,59 @@ namespace RTRPG_CLI
 
         public void List(List<string> args)
         {
-            if (args.Count <= 1)
-                Console.WriteLine("Must specify type (map or character)");
-            else
+            try
             {
-                switch (args[1].ToLower())
-                {
-                    case "map":
-                    {
-                        Console.WriteLine($"List all maps, size: {__manager.maps.Count}");
+                Dictionary<string, Action> actions = new Dictionary<string, Action>() {
+                    {"map", () => {
+                        Console.WriteLine($"list all maps, count: {__manager.maps.Count}");
                         foreach (var obj in __manager.maps)
                         {
                             Console.WriteLine(obj.Serialize());
                         }
-                        break;
-                    }
-                    case "character":
-                    {
-                        Console.WriteLine($"List all characters, size: {__manager.characters.Count}");
+                        }
+                    },
+                    {"character", () => {
+                        Console.WriteLine($"list all characters, count: {__manager.characters.Count}");
                         foreach (var obj in __manager.characters)
                         {
                             Console.WriteLine(obj.Serialize());
                         }
-                        break;
+                        }
                     }
-                }
+                };
+
+                TypeSelect(args[1].ToLower(), actions);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Must specify type (map or character)");
+                Console.WriteLine(e.Message);
             }
         }
 
         public void Add(List<string> args)
         {
-            if (args.Count <= 2)
-                Console.WriteLine("Must specify type (map or character) and name, i.e. \"add map 真新镇\"");
-            else
+            try
             {
-                switch (args[1].ToLower())
-                {
-                    case "map":
-                    {
+                Dictionary<string, Action> actions = new Dictionary<string, Action>() {
+                    {"map", () => {
                         var map = __manager.AddMap(args[2]);
-                        Console.WriteLine($"Add map: \n {map.Serialize()}");
-                        break;
-                    }
-                    case "character":
-                    {
+                        Console.WriteLine($"added a map: \n {map.Serialize()}");
+                        }
+                    },
+                    {"character", () => {
                         var character = __manager.AddCharacter(args[2]);
-                        Console.WriteLine($"Add character: \n {character.Serialize()}");
-                        break;
+                        Console.WriteLine($"added a character: \n {character.Serialize()}");
+                        }
                     }
-                    default:
-                    {
-                        Console.WriteLine($"Invalid type \"{args[1]}\".");
-                        break;
-                    }
-                }
+                };
+
+                TypeSelect(args[1].ToLower(), actions);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Must specify type (map or character) and name, i.e. \"add map 真新镇\"");
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -129,7 +128,7 @@ namespace RTRPG_CLI
             }
             catch (Exception e)
             {
-                Console.WriteLine("Load failed.");
+                Console.WriteLine("load failed.");
                 Console.WriteLine(e.Message);
             }
         }
@@ -144,8 +143,21 @@ namespace RTRPG_CLI
             }
             catch (Exception e)
             {
-                Console.WriteLine("Save failed.");
+                Console.WriteLine("save failed.");
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        public static void TypeSelect(string type, Dictionary<string, Action> actions)
+        {
+            string _type = type.ToLower();
+            if (actions.ContainsKey(_type))
+            {
+                actions[_type].Invoke();
+            }
+            else
+            {
+                throw new KeyNotFoundException("Invalid operate type.");
             }
         }
     }
